@@ -2,11 +2,12 @@ using FarmPage.Quest;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UI;
 
 public abstract class QuestCollection : MonoBehaviour
 {
     public event System.Action OnAllUnitsDeaded;
-
+        
     [SerializeField] private Transform _unitContainer;
     [SerializeField] private Unit _unitPrefab;
 

@@ -14,6 +14,7 @@ namespace FarmPage.Quest
 
     public class Enemy : Unit
     {
+        [SerializeField] private EnemyFlyAnimation _flyAnimation;
         private EnemyQuestData _enemyQuestData;
 
         public override int Damage()
@@ -21,12 +22,18 @@ namespace FarmPage.Quest
             return Random.Range(_enemyQuestData.Damage/2 , _enemyQuestData.Damage);
         }
 
-        public void Init(EnemyQuestData enemyQuestData)
+        public override void TakeDamage(int amountDamage)
+        {
+            base.TakeDamage(amountDamage);
+        }
+
+        public void Init(EnemyQuestData enemyQuestData, HorizontalLayoutGroup horizontalLayoutGroup)
         {
             _enemyQuestData = enemyQuestData;
             _health = _enemyQuestData.MaxHealth;
             _maxHealth = _enemyQuestData.MaxHealth;
             _view.sprite = enemyQuestData.View;
+            _flyAnimation.SetStartPosition(horizontalLayoutGroup);
             Init();
         }
     }
