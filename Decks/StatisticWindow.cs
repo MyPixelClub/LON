@@ -59,7 +59,7 @@ public class StatisticWindow : MonoBehaviour
     {
         gameObject.SetActive(true);
 
-        _icon.sprite = cardCell.Icon.sprite;
+        _icon.sprite = cardCell.UIIcon;
 
         _atk.text =  cardCell.Attack.ToString();
         _def.text =  cardCell.Def.ToString();

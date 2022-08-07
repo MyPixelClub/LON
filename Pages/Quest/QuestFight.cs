@@ -10,6 +10,7 @@ namespace FarmPage.Quest
     public class QuestFight : MonoBehaviour
     {
         [SerializeField] private Player _player;
+        [SerializeField] private PlayerStatisticQuest _playerStatisticQuest;
 
         [SerializeField] private QuestPlayerCards _playerCards;
         [SerializeField] private QuestEnemyCollection _enemyCollection;
@@ -35,21 +36,25 @@ namespace FarmPage.Quest
         {
             yield return new WaitForSeconds(1f);
 
-            while (_enemyCollection.IsUnitsAlive && _playerCards.IsUnitsAlive)
+            while (_playerCards.IsUnitsAlive && _playerStatisticQuest.Health > 0)
             {
-                _enemyCollection.TakeDamage(_playerCards.UnitsDamage);
-                yield return new WaitForSeconds(1);
+                yield return _enemyCollection.TakeDamage(_playerCards.UnitsDamage);
+                yield return new WaitForSeconds(2);
 
-                if (_enemyCollection.IsUnitsAlive && _playerCards.IsUnitsAlive)
+                if (_enemyCollection.IsUnitsAlive)
                 {
-                    _playerCards.TakeDamage(_enemyCollection.UnitsDamage);
-                    yield return new WaitForSeconds(1);
+                    yield return _playerCards.TakeDamage(_enemyCollection.UnitsDamage);
+                    yield return new WaitForSeconds(2);
+                }
+                else
+                {
+                    break;
                 }
             }
 
             yield return new WaitForSeconds(0.5f);
 
-            if (_playerCards.IsUnitsAlive)
+            if (_playerCards.IsUnitsAlive && _playerStatisticQuest.Health > 0)
                 yield return PlayerWin();
             else
                 yield return PlayerLose();

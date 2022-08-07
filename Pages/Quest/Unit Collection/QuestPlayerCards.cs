@@ -10,6 +10,7 @@ public class QuestPlayerCards : QuestCollection
     public event Action OnValueChanged;
 
     [SerializeField] private AttackDeck _attackDeck;
+    [SerializeField] private PlayerStatisticQuest _playerStatisticQuest;
 
     protected override Unit[] GetArrayType()
     {
@@ -26,6 +27,6 @@ public class QuestPlayerCards : QuestCollection
 
     protected override void InitUnit(Unit unit, int position)
     {
-        (unit as FarmPage.Quest.Card).Init(_attackDeck.CardsInDeck[position]);
+        (unit as FarmPage.Quest.Card).Init(_attackDeck.CardsInDeck[position], _playerStatisticQuest);
     }
 }

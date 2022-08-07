@@ -21,6 +21,6 @@ public class InventoryCardStatistic : MonoBehaviour
         _rare.text = cardCell.Card.Rarity.ToString();
         _level.text = cardCell.Level.ToString();
         _power.text = (cardCell.Attack + cardCell.Health).ToString();
-        _cardImage.sprite = cardCell.Icon.sprite;
+        _cardImage.sprite = cardCell.UIIcon;
     }
 }

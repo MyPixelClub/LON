@@ -160,7 +160,7 @@ namespace FarmPage.Battle
                     Card randomMyCard = myCards[randomNumber];
 
                     var myCardAnimator = myCardAnimators[randomNumber];
-                    //myCardAnimator.transform.parent = myCardAnimator.transform.parent;
+
                     myCardAnimator.Selected();
                     yield return new WaitForSeconds(0.2f);
 

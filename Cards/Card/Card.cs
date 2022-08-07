@@ -26,6 +26,12 @@ public class Card : ScriptableObject, ICard, IPrize
 {
     [SerializeField] private Sprite _imageFirstEvolution;
     [SerializeField] private Sprite _imageSecondeEvolution;
+
+    [SerializeField] private Sprite _frame;
+
+    [SerializeField] private Sprite _squereFirstEvolution;
+    [SerializeField] private Sprite _squereSecondeEvolution;
+
     [SerializeField] private string _name;
     [SerializeField] private RarityCard _rarity;
     [SerializeField] private RaceCard _race;
@@ -82,6 +88,8 @@ public class Card : ScriptableObject, ICard, IPrize
     public string Discription => _discription;
     public Sprite ImageFirstEvolution => _imageFirstEvolution;
     public Sprite ImageSecondeEvolution => _imageSecondeEvolution;
+    public Sprite Frame => _frame;
+
     public Sprite UIIcon
     {
         get
@@ -92,7 +100,18 @@ public class Card : ScriptableObject, ICard, IPrize
                 return _imageSecondeEvolution;
         }
     }
-    
+
+    public Sprite SquereUIICon
+    {
+        get
+        {
+            if (_evolution < 2)
+                return _squereFirstEvolution;
+            else
+                return _squereSecondeEvolution;
+        }
+    }
+
     Card ICard.Card => this;
 
     public void Init(int evolution, int level, int id, int attack, int defence, int health, int currentLevelPoint, int maxLevelPoint)

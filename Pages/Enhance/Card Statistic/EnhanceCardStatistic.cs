@@ -20,7 +20,7 @@ namespace FarmPage.Enhance.Card_Statistic
 
         public void Render(CardCell cardForDelete)
         {
-            _icon.sprite = cardForDelete.Icon.sprite;
+            _icon.sprite = cardForDelete.UIIcon;
             //_frameImage.sprite = cardForDelete.Card.GetFrame();
             //_frameImage.gameObject.SetActive(true);
 

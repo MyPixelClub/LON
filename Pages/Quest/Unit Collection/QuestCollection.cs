@@ -20,6 +20,9 @@ public abstract class QuestCollection : MonoBehaviour
     {
         get
         {
+            StartCoroutine(FindRandomUnit().Selected());
+
+
             var damage = 0;
 
             foreach (var unit in _units)
@@ -54,8 +57,10 @@ public abstract class QuestCollection : MonoBehaviour
         }
     }
 
-    public void TakeDamage(int amountDamage)
+    public IEnumerator TakeDamage(int amountDamage)
     {
+        yield return new WaitForSeconds(0.45f);
+
         if (amountDamage < 0)
             throw new System.AggregateException();
 

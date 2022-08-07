@@ -11,8 +11,6 @@ public class EnemyFlyAnimation : MonoBehaviour
     [SerializeField] private Slider _healthSlider;
     [SerializeField] private Enemy _enemy;
 
-    [SerializeField] private Vector3[] _variationHealthSliderPosition;
-
     private float _freqtion;
     private float _time;
     private float _offset;
@@ -39,7 +37,6 @@ public class EnemyFlyAnimation : MonoBehaviour
         {
             _startPosition = transform.position;
             _startPosition += new Vector3(Random.Range(-0.5f, 0.5f), Random.Range(-0.5f, 0.5f));
-            _healthSlider.transform.localPosition += _variationHealthSliderPosition[Random.Range(0, _variationHealthSliderPosition.Length)];
         }
         _isFirstFrame = false;
         _horizontalLayoutGroup.enabled = false;

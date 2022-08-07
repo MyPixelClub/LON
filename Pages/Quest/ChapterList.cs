@@ -39,6 +39,9 @@ namespace FarmPage.Quest
         {
             if(lastPasedQuestId > _countQuestPassed)
                 _countQuestPassed = lastPasedQuestId;
+
+            gameObject.SetActive(false);
+            gameObject.SetActive(true);
         }
     }
 }

@@ -13,6 +13,8 @@ public abstract class CardCell : MonoBehaviour, ICard
 
     [SerializeField] protected Image _icon;
     [SerializeField] private TMP_Text _cardName;
+
+    [SerializeField] private Image _frameImage;
     
     [SerializeField] private CardStatsPanel _cardStatsPanel;
     
@@ -35,7 +37,9 @@ public abstract class CardCell : MonoBehaviour, ICard
     private const float ValueIncreaseMultiplier = 1.35f;
     private const float ValueLevelUpIncreaseMultiplier = 1.15f;
 
-    public Image Icon => _icon;
+    public Sprite UIIcon => _icon.sprite;
+    public Sprite Frame => _frameImage.sprite;
+
     public int Attack => _attack;
     public int Def => _def;
     public int Health => _health;
@@ -56,9 +60,9 @@ public abstract class CardCell : MonoBehaviour, ICard
 
     public virtual Card Card => _card;
 
-    public void Render(Card card)
+    public void Render(ICard card)
     {
-        _card = card;
+        _card = card.Card;
 
         _attack = card.Attack;
         _def = card.Def;
@@ -84,39 +88,6 @@ public abstract class CardCell : MonoBehaviour, ICard
         }
 
         if (card.Evolution == 1)
-            _icon.sprite = _card.ImageFirstEvolution;
-        else
-            _icon.sprite = _card.ImageSecondeEvolution;
-    }
-
-    public void Render(CardCell cardCell)
-    {
-        _card = cardCell.Card;
-
-        _attack = cardCell.Attack;
-        _def = cardCell.Def;
-        _health = cardCell.Health;
-        _level = cardCell.Level;
-        _evolution = cardCell.Evolution;
-        _maxLevelPoint = cardCell.MaxLevelPoint;
-
-        if (_cardStatsPanel)
-        {
-            if (_card.Id != 0)
-            {
-                _cardStatsPanel.gameObject.SetActive(true);
-                _cardStatsPanel.Init(Attack.ToString(), Def, Health, _card.SkillIcon);
-                _cardName.gameObject.SetActive(true);
-                _cardName.text = _card.Name;
-                _icon.sprite = cardCell.Card.UIIcon;
-            }
-            else
-            {
-                _cardName.gameObject.SetActive(false);
-            }
-        }
-
-        if (cardCell.Evolution == 1)
             _icon.sprite = _card.ImageFirstEvolution;
         else
             _icon.sprite = _card.ImageSecondeEvolution;
