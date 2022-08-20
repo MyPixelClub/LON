@@ -12,14 +12,14 @@ public class Shop : MonoBehaviour, IIncreaserWalletValueAndCardsCount
 
     [SerializeField] private Inventory _inventory;
     [SerializeField] private CristalWallet _cristalWallet;
-    public CristalWallet CristalWallet => _cristalWallet;
-
     [SerializeField] private CardCollection _cardCollection;
+    private ConfirmWindow _confirmWindow;
+
     public CardCollection CardCollection => _cardCollection;
     public Inventory Inventory => _inventory;
     public GoldWallet GoldWallet => throw new System.NotImplementedException();
-
-
+    public CristalWallet CristalWallet => _cristalWallet;
+    public ConfirmWindow ConfirmWindow => _confirmWindow;
 
     private void Start()
     {
@@ -49,9 +49,10 @@ public class Shop : MonoBehaviour, IIncreaserWalletValueAndCardsCount
         selectButton.SelectCategore();
     }
 
-    public void BuyItem(IShopItem shopItem)
+    public void BuyItem(IShopItem shopItem, ConfirmWindow confirmWindow)
     {
+        _confirmWindow = confirmWindow;
+
         shopItem.Buy(this);
     }
-
 }

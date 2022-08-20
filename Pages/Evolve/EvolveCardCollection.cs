@@ -17,8 +17,6 @@ namespace FarmPage.Evolve
         private List<CardCollectionCell> _listCardsInCollection = new();
         private CardCollectionCell _exampleCard;
 
-        //[HideInInspector] public EvolutionCard OneOfCardInEvolutioin;
-
         private void OnEnable()
         {
             if (_evolution.FirstCard.CardCell == null)

@@ -17,6 +17,8 @@ public class RouletteAnimator : MonoBehaviour
 
     [SerializeField] private RoulettePage _roulettePage;
 
+    [SerializeField] private Color _invisibleColor, _visibleColor;
+
     private void OnEnable()
     {
         UnSelectAllCells();
@@ -27,13 +29,14 @@ public class RouletteAnimator : MonoBehaviour
         _spinButton.onClick.AddListener(() =>
         {
             _spinButton.interactable = false;
+            _spinButtonText.color = _invisibleColor;
 
             _pickerWheel.OnSpinStart(UnSelectAllCells);
 
             _pickerWheel.OnSpinEnd(wheelPiece =>
             {
                 wheelPiece.Select();
-
+                _spinButtonText.color = _visibleColor;
                 _spinButton.interactable = true;
                 _roulettePage.TakeItem(wheelPiece.Prize);
             });

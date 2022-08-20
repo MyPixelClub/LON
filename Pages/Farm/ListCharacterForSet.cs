@@ -1,27 +1,12 @@
-using System.Collections;
 using System.Collections.Generic;
-using System.Linq;
-using Infrastructure.Services;
-using FarmPage.Farm;
 using UnityEngine;
-using UnityEngine.Events;
-using UnityEngine.UI;
-using Zenject;
 using System;
-
-public enum PlaceCharacterType
-{
-    NFT,
-    Card
-}
+using FarmPage.Farm;
 
 public class ListCharacterForSet : MonoBehaviour
 {
-    public event UnityAction<Action> OnCharacterSelected;
-
     [SerializeField] private Transform _container;
     [SerializeField] private CharacterCell _characterCellTamplate;
-    [SerializeField] private List<Sprite> _cardSprite;
     [SerializeField] private List<Sprite> _nftSprites;
 
     [SerializeField] private PlaceInformationWindow _informationWindow;
@@ -35,7 +20,7 @@ public class ListCharacterForSet : MonoBehaviour
     {
         foreach (var cell in _characterCells.ToArray())
         {
-            cell.OnSelect -= SelectCharacter;
+            cell.OnSelected -= SelectCharacter;
             Destroy(cell.gameObject);
         }
 
@@ -44,20 +29,24 @@ public class ListCharacterForSet : MonoBehaviour
 
     public void OpenCharacterList(Place place)
     {
+        if (place.IsSet) return;
+
         gameObject.SetActive(true);
 
-        if (place.Data.CharacterType == PlaceCharacterType.NFT)
-            Render(_nftSprites);
-        else
-            Render(_cardSprite);
+        Render(_nftSprites);
 
         _setCharacter = place.SetCharacter;
     }
 
     private void SelectCharacter(CharacterCell character)
     {
+        foreach (var cell in _characterCells)
+            cell.UnSelect();
+
+        character.Select();
+
         _selectionCharacter = character;
-        OnCharacterSelected?.Invoke(SetCharacter);
+        _informationWindow.SetCharacterInPlace = SetCharacter;
     }
 
     private void SetCharacter()
@@ -73,7 +62,7 @@ public class ListCharacterForSet : MonoBehaviour
             var cell = Instantiate(_characterCellTamplate, _container);
             cell.Render(sprite);
             _characterCells.Add(cell);
-            cell.OnSelect += SelectCharacter;
+            cell.OnSelected += SelectCharacter;
         }
     }
 }

@@ -14,6 +14,8 @@ namespace FarmPage
         [SerializeField] private GoldWallet _goldWallet;
         [SerializeField] private Inventory _inventory;
 
+        [SerializeField] private ParticleSystem _startBurstParticle;
+
         public CardCollection CardCollection => throw new System.NotImplementedException();
 
         public CristalWallet CristalWallet => _cristalWallet;
@@ -41,6 +43,8 @@ namespace FarmPage
 
                 cell.Prize.TakeItemAsPrize(this, cell.AmountPrize);
             }
+
+            _startBurstParticle.Play();
         }
     }
 }

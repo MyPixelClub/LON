@@ -12,18 +12,10 @@ namespace Battle
         [SerializeField]
         private TextMeshProUGUI _turnText;
 
-        public IEnumerator PlayerTurn()
+        public IEnumerator PlayRoundIntro(int roundNumber)
         {
             gameObject.SetActive(true);
-            _turnText.text = "Round 1";
-            yield return new WaitForSeconds(1f);
-            gameObject.SetActive(false);
-        }
-
-        public IEnumerator OpponentTurn()
-        {
-            gameObject.SetActive(true);
-            _turnText.text = "Round 2";
+            _turnText.text = $"Round {roundNumber}";
             yield return new WaitForSeconds(1f);
             gameObject.SetActive(false);
         }

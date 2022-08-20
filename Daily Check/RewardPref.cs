@@ -14,14 +14,14 @@ public class RewardPref : MonoBehaviour
     [SerializeField] private Image _rewardIcon;
     [SerializeField] private Sprite _rewardGold, _rewardCristal;
 
-    public void SetRewardData(int day, int currentStreak, Reward reward, bool canClaimRewards)
+    public void SetRewardData(int day, int currentStreak, Prize reward, bool canClaimRewards)
     {
         _currentStreakFrame.gameObject.SetActive(false);
 
         _dayText.text = $"Day {day + 1}";
 
-        _rewardIcon.sprite = reward.Type == Reward.RewardType.Gold ? _rewardGold : _rewardCristal;
-        _rewardValue.text = reward.Value.ToString();
+        _rewardIcon.sprite = reward.UIIcon;
+        _rewardValue.text = reward.AmountPrize.ToString();
 
         _backGround.sprite = day < currentStreak ? _takenSprite : _normalSprite;
 

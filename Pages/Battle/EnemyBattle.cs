@@ -38,6 +38,7 @@ public class EnemyBattle : MonoBehaviour
     {
         _button.onClick.AddListener(SelectEnemy);
         ShowPowerValue();
+        _selectionFrame.SetActive(false);
     }
 
     private void OnDisable()
@@ -49,7 +50,7 @@ public class EnemyBattle : MonoBehaviour
     {
         UnSelectOtherEnemy();
         _selectionFrame.SetActive(true);
-        _battleConfirmWindow.SeelectEnemyCards(this);
+        _battleConfirmWindow.SelectEnemyCards(this);
     }
 
     private void UnSelectOtherEnemy()

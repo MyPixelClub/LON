@@ -14,6 +14,8 @@ namespace Cards.Card
         [SerializeField] 
         private Image _image;
 
+        [SerializeField] private Image _deadImage;
+
         [SerializeField] 
         private Sprite _sideBackSprite;
 
@@ -54,12 +56,15 @@ namespace Cards.Card
         private Animator _animator;
 
         [SerializeField] private CardStatsPanel _cardStatsPanel;
-        [SerializeField] private GameObject _frame, _backGround;
+        [SerializeField] private GameObject _frame;
+
+        [SerializeField] private Color _numberNormalColor;
 
         private Vector3 _scale;
         private Vector3 _localPosition;
 
         public int HealthLeft { get; private set; }
+        public global::Card Card { get; private set; }
 
         private void Start()
         {
@@ -68,17 +73,30 @@ namespace Cards.Card
             Hide();
         }
 
+        private void OnEnable()
+        {
+            _animator.enabled = true;
+            HealthLeft = _cardStatsPanel.Health;
+            _deadImage.DOColor(new Color(0,0,0,0), 0);
+        }
+
+        private void OnDisable()
+        {
+            _animator.enabled = false;
+        }
+
         public void Init(global::Card card)
         {
+            Card = card;
+
             _image.sprite = card.UIIcon;
             _shadow.sprite = _image.sprite;
             _cardStatsPanel.Init(card.Attack.ToString(), card.Def, card.Health, card.SkillIcon);
             _frame.gameObject.SetActive(false);
-            _backGround.gameObject.SetActive(false);
             _cardStatsPanel.gameObject.SetActive(false);
         }
 
-        public IEnumerator StartingAnimation(Sequence sequence, float y)
+        public IEnumerator StartIntro(Sequence sequence, float y)
         {
             _magicCircleImage.gameObject.SetActive(true);
 
@@ -90,8 +108,6 @@ namespace Cards.Card
             _animator.SetTrigger("Intro");
             yield return new WaitForSeconds(2f);
 
-            //_smokeEffect.GetComponent<Image>().enabled = true;
-            //_smokeEffect.SetTrigger(_smoke);
             _magicCircleImage.gameObject.SetActive(false);
 
             _fallAnimation.Play();
@@ -99,7 +115,6 @@ namespace Cards.Card
             yield return new WaitForSeconds(0.5f);
 
             _frame.gameObject.SetActive(true);
-            _backGround.gameObject.SetActive(true);
             _cardStatsPanel.gameObject.SetActive(true);
             _image.gameObject.SetActive(true);
 
@@ -119,21 +134,28 @@ namespace Cards.Card
             yield return new WaitForSeconds(0.3f);
     
             var damageText = _damageTexts[0];
-            damageText.text = '-' + attack.ToString();
-            HealthLeft = _cardStatsPanel.DecreaseHealth(attack);
+            _cardStatsPanel.DecreaseHealth(attack);
+            HealthLeft = _cardStatsPanel.Health;
+            var finelDamage = _cardStatsPanel.DamageAfterRessist;
+
+            if (finelDamage <= 0)
+                damageText.DOColor(Color.gray, 0.3f);
+            else
+                damageText.DOColor(new Color(1, 0, 0, 1), 0.3f);
+
+            damageText.text = '-' + finelDamage.ToString();
             _cardStatsPanel.HealthText.color = Color.red;
-
-            damageText.DOColor(new Color(1, 0, 0, 1), 0.3f);
-            yield return new WaitForSeconds(0.3f);
             
-
-            yield return new WaitForSeconds(0.3f);
+            yield return new WaitForSeconds(0.6f);
             damageText.DOColor(new Color(1, 0, 0, 0), 0.3f);
             yield return new WaitForSeconds(0.3f);
 
             Destroy(effect);
 
-            _cardStatsPanel.HealthText.color = Color.white;
+            _cardStatsPanel.HealthText.color = _numberNormalColor;
+
+            if (HealthLeft == 0)
+                _deadImage.DOColor(new Color(0,0,0, 0.5f), 1);
         }
 
         private IEnumerator Shake()
@@ -160,10 +182,6 @@ namespace Cards.Card
                 .Insert(0, transform.DOLocalMove(_localPosition + new Vector3(0, 50, 0), 0.2f))
                 .Insert(0, transform.DOScale(_scale * 1.2f, 0.2f))
                 .Insert(0.5f, _selectImage.DOColor(Color.clear, 0.5f));
-                //.Insert(1, transform.DOLocalMove(_localPosition, 0.5f))
-                //.Insert(1, transform.DOScale(_scale, 0.5f));
-
-                //Unselected();
         }
 
         public void Unselected()
@@ -171,10 +189,6 @@ namespace Cards.Card
             var sequence = DOTween.Sequence();
 
             sequence
-                //.Insert(0, _selectImage.DOColor(new Color(1, 1, 1, 0.5f), 0.5f))
-                //.Insert(0, transform.DOLocalMove(_localPosition + new Vector3(0, 100, 0), 1))
-                //.Insert(0, transform.DOScale(_scale * 1.5f, 1))
-                //.Insert(0.5f, _selectImage.DOColor(Color.clear, 0.5f))
                 .Insert(0, transform.DOLocalMove(_localPosition, 0.2f))
                 .Insert(0, transform.DOScale(_scale, 0.2f));
         }

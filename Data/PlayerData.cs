@@ -28,7 +28,6 @@ namespace Data
         public DateTime FirstDayInGame1;
         public Species Species;
         public int[] ItemsId;
-        public List<ShopItemBottle> Items;
         public int CountQuestPassed;
         public int[] FarmCharacterCellIndex;
     }

@@ -27,11 +27,6 @@ public class AvatarsEditor : MonoBehaviour
         }
     }
 
-    public void ChangeAvatar()
-    {
-        _playerAvatar.sprite = Avatar;
-    }
-
     private void SelectAvatar(AvatarCell avatarCell)
     {
         foreach (var avatar in _avatars)

@@ -7,14 +7,14 @@ namespace Infrastructure.Services
     {
         public readonly Sprite[] Frames;
         public readonly Card[] AllCards;
-        public readonly ShopItemBottle[] ShopItemBottles;
+        public readonly ShopItemEnergyBottle[] ShopItemBottles;
         public readonly Texture2D CursorImage;
         public readonly Texture2D CursorClickImage;
         public readonly Sprite[] AllNFT;
         public readonly Sprite GoldSprite;
         public readonly Sprite CristalSprite;
 
-        public AssetProviderService(Sprite[] frames, Card[] allCards, ShopItemBottle[] shopItemBottles, Texture2D cursorImage, Texture2D cursorClickImage, Sprite[] allNFT, Sprite goldSprite, Sprite cristalSprite)
+        public AssetProviderService(Sprite[] frames, Card[] allCards, ShopItemEnergyBottle[] shopItemBottles, Texture2D cursorImage, Texture2D cursorClickImage, Sprite[] allNFT, Sprite goldSprite, Sprite cristalSprite)
         {
             Frames = frames;
             AllCards = allCards;

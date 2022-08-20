@@ -1,13 +1,11 @@
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
-using UnityEngine.EventSystems;
 using UnityEngine.UI;
 
 [RequireComponent(typeof(Button))]
 public class InventoryShopItemRendering : InventoryCategoryRendering
 {
     [SerializeField] private Inventory _inventory;
+    [SerializeField] private InvetoryItemType _currentItemCategory;
 
     private void OnEnable()
     {
@@ -24,33 +22,13 @@ public class InventoryShopItemRendering : InventoryCategoryRendering
     {
         _inventory.ConfirmWindow.gameObject.SetActive(false);
 
-        foreach (Transform childs in _container)
-            Destroy(childs.gameObject);
+        foreach (var item in _inventory.ItemCollection)
+            item.gameObject.SetActive(false);
 
-        var inventoryCellList = new List<InventoryCell>();
-
-        System.Func<ShopItem, bool> itemContainsList = (a) =>
+        _inventory.ItemCollection.ForEach(item => 
         {
-            foreach (var item in inventoryCellList)
-            {
-                if (item.Bottel.name == a.name)
-                {
-                    item.AmountThisItem++;
-                    return true;
-                }
-            };
-
-            return false;
-        };
-
-        _inventory.BottleCollection.ForEach(item =>
-        {
-            if (itemContainsList(item) == false)
-            {
-                var cell = Instantiate(_inventoryItemCellTemplate, _container);
-                cell.Render(item, _inventory);
-                inventoryCellList.Add(cell);
-            }
+            if(_currentItemCategory == item.InventoryItem.invetoryItemType)
+                item.gameObject.SetActive(true);
         });
     }
 }   

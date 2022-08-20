@@ -32,8 +32,7 @@ namespace FarmPage.Enhance
             _enchance = enchance;
             _cardInCollection = cardInCollection;
         }
-        
-       
+
         private void SwitchSelectionState()
         {
             if (_isSelect)
@@ -43,14 +42,9 @@ namespace FarmPage.Enhance
             else
             {
                 if (_enchance.UpgradeCard.CardCell.Level + _enchanceCardForDeleteCollection.PossibleLevelUpSlider.HowMuchIncreaseLevel < 25)
-                {
                     _enchanceCardForDeleteCollection.AddToDeleteCollection(_cardInCollection);
-                    //_cardStatistic.Render(_cardInCollection);
-                }
                 else
-                {
                     return;
-                }
             }
 
             _isSelect = !_isSelect;

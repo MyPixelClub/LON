@@ -21,8 +21,9 @@ public class ShopItemCardPack : ShopItem, IShopItem
 
     public void Buy(IIncreaserWalletValueAndCardsCount increaser)
     {
-        Card[] randomCardsData = GetRandomCards();
-        increaser.CardCollection.AddCards(randomCardsData);
+        Card[] randomCards = GetRandomCards();
+        increaser.CardCollection.AddCards(randomCards);
+        (increaser as Shop).ConfirmWindow.CardRepresentation(randomCards).Invoke();
     }
 
     private Card[] GetRandomCards()

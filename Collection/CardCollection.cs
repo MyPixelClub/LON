@@ -46,7 +46,7 @@ public class CardCollection : CardCollectionSort<CardCollectionCell>
     public void AddCards(Card[] newCards)
     {
         foreach (var newCard in newCards)
-            AddCard(newCard);
+            AddCard(newCard);        
     }
 
     public void AddCard(Card newCard)

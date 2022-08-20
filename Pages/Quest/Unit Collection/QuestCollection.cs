@@ -7,12 +7,12 @@ using UnityEngine.UI;
 public abstract class QuestCollection : MonoBehaviour
 {
     public event System.Action OnAllUnitsDeaded;
-        
+
     [SerializeField] private Transform _unitContainer;
     [SerializeField] private Unit _unitPrefab;
 
     [SerializeField] private Shaking _shaking;
-    [SerializeField] private ParticleSystem _attackEffect;
+    [SerializeField] private ParticleSystem[] _attackEffect;    
 
     private Unit[] _units;
 
@@ -70,9 +70,10 @@ public abstract class QuestCollection : MonoBehaviour
         {
             unit.TakeDamage(amountDamage);
 
-            var effect = Instantiate(_attackEffect, unit.transform.position, Quaternion.identity);
+            var effect = Instantiate(_attackEffect[Random.Range(0, _attackEffect.Length)], unit.transform.position, Quaternion.identity);
+            effect.transform.localScale = new(0.2f, 0.2f);
             _shaking.Shake(0.5f, 10);
-            Destroy(effect.gameObject, 4);
+            Destroy(effect.gameObject, 1);
         }
     }
 

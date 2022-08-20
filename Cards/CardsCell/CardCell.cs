@@ -12,9 +12,6 @@ public abstract class CardCell : MonoBehaviour, ICard
     public event UnityAction OnLevelUp;
 
     [SerializeField] protected Image _icon;
-    [SerializeField] private TMP_Text _cardName;
-
-    [SerializeField] private Image _frameImage;
     
     [SerializeField] private CardStatsPanel _cardStatsPanel;
     
@@ -37,8 +34,16 @@ public abstract class CardCell : MonoBehaviour, ICard
     private const float ValueIncreaseMultiplier = 1.35f;
     private const float ValueLevelUpIncreaseMultiplier = 1.15f;
 
-    public Sprite UIIcon => _icon.sprite;
-    public Sprite Frame => _frameImage.sprite;
+    public Sprite UIIcon
+    {
+        get
+        {
+            if (_evolution < 2)
+                return _card.ImageFirstEvolution;
+            else
+                return _card.ImageSecondeEvolution;
+        }
+    }
 
     public int Attack => _attack;
     public int Def => _def;
@@ -64,11 +69,12 @@ public abstract class CardCell : MonoBehaviour, ICard
     {
         _card = card.Card;
 
+        _icon.sprite = card.UIIcon;
         _attack = card.Attack;
         _def = card.Def;
         _health = card.Health;
         _level = card.Level;
-        _evolution = 1;
+        _evolution = card.Evolution;
         _maxLevelPoint = card.MaxLevelPoint;
 
         if (_cardStatsPanel)
@@ -77,20 +83,18 @@ public abstract class CardCell : MonoBehaviour, ICard
             {
                 _cardStatsPanel.gameObject.SetActive(true);
                 _cardStatsPanel.Init(Attack.ToString(), Def, Health, _card.SkillIcon);
-                _cardName.gameObject.SetActive(true);
-                _cardName.text = _card.Name;
                 _icon.sprite = card.UIIcon;
             }
-            else
-            {
-                _cardName.gameObject.SetActive(false);
-            }
         }
+    }
 
-        if (card.Evolution == 1)
-            _icon.sprite = _card.ImageFirstEvolution;
-        else
-            _icon.sprite = _card.ImageSecondeEvolution;
+    public float GetDamageValueAfterResist(float amountDamage)
+    {
+        amountDamage -= Random.Range(_def / 2, _def);
+
+        if(amountDamage < 0) amountDamage = 0;
+
+        return amountDamage;
     }
 
     public void LevelUp(CardCell[] cardsForEnhance)
@@ -149,6 +153,7 @@ public abstract class CardCell : MonoBehaviour, ICard
         _evolution = 2;
         _level = 1;
         _maxLevelPoint = 1000;
+        _icon.sprite = UIIcon;
     }
 
     private int GetEvolveUpValue(int firstValue, int secondValue)

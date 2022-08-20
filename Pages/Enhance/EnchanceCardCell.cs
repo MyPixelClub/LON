@@ -13,7 +13,8 @@ namespace FarmPage.Enhance
 
         private new void OnEnable()
         {
-            _button.onClick.AddListener(() => _statisticWindow.Render(this));
+            if(_button != null)
+                _button.onClick.AddListener(() => _statisticWindow.Render(this));
             _selectButton.onClick.AddListener(SelectCard);
         }
 

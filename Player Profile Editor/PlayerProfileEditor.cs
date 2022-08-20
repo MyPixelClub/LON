@@ -9,7 +9,9 @@ public class PlayerProfileEditor : MonoBehaviour
     [SerializeField] private AvatarsEditor _avatarsEditor;
     [SerializeField] private NameEditor _nameEditors;
 
-    [SerializeField] private Button _confirmButton;    
+    [SerializeField] private Button _confirmButton;
+
+    [SerializeField] private Player _player;
 
     private void OnEnable()
     {
@@ -29,12 +31,12 @@ public class PlayerProfileEditor : MonoBehaviour
     private void SelectAvatarsEditor()
     {
         _confirmButton.onClick.RemoveAllListeners();
-        _confirmButton.onClick.AddListener(_avatarsEditor.ChangeAvatar);
+        _confirmButton.onClick.AddListener(() => _player.ChangeAvarar(_avatarsEditor.Avatar));
     }
 
     private void SelectNameEditors()
     {
         _confirmButton.onClick.RemoveAllListeners();
-        _confirmButton.onClick.AddListener(_nameEditors.ChangeName);
+        _confirmButton.onClick.AddListener(() => _player.ChangeName(_nameEditors.GetNewName()));
     }
 }

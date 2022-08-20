@@ -23,12 +23,12 @@ public class HotKey : MonoBehaviour
     public void Unselect()
     {
         _transform.localScale = new Vector3(1, 1);
-        _icon.color = new Color(1, 1, 1, 1);
+        _icon.color = new Color(0.6f, 0.6f, 0.6f, 1);
     }
 
     public void Select()
     {
-        _transform.localScale = new Vector3(1.2f, 1.2f);
-        _icon.color = new Color(0.6f, 0.6f, 0.6f, 1);
+        _transform.localScale = new Vector3(1.1f, 1.1f);
+        _icon.color = new Color(1, 1, 1, 1);
     }
 }

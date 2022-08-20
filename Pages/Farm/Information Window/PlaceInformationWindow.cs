@@ -11,11 +11,9 @@ using UnityEngine.UI;
 public class PlaceInformationWindow : MonoBehaviour
 {
     [SerializeField] private Image _locationImage;
-    [SerializeField] private TMP_Text _locationDiscription, _locationName;
+    [SerializeField] private TMP_Text _locationDiscription;
 
-    [SerializeField] private Image _status;
     [SerializeField] private TMP_Text _statusText;
-    [SerializeField] private Color _farmColor, _finishColor, _notfarmColor;
 
     [SerializeField] private Button _setOrUnsetCharacterButton, _closeButton;
     [SerializeField] private TMP_Text _setOrUnsetCharacterButtonText;
@@ -30,26 +28,36 @@ public class PlaceInformationWindow : MonoBehaviour
     
     private Farm _farm;
 
-    private Action _setCharacter;
+    private Action _setCharacterInPlace;
+    public Action SetCharacterInPlace
+    {
+        get
+        {
+            return _setCharacterInPlace;
+        }
+        set
+        {
+            _setCharacterInPlace = value;
+            RenderButton(_farm.Place);
+        }
+    }
 
     private void OnEnable()
     {
         _cooldownSelector.OnCooldownChanged += SetCooldownMultiplyer;
-        _characterList.OnCharacterSelected += (setCharacter) =>
-        {
-            _setCharacter = setCharacter;
-            RenderButton(_farm.Place);
-        };
     }
 
     private void OnDisable()
     {
         _cooldownSelector.OnCooldownChanged -= SetCooldownMultiplyer;
         _farm.OnFarmFinished -= Render;
+        SetCharacterInPlace = null;
     }
 
     public void Render(Place place)
     {
+        gameObject.SetActive(true);
+
         foreach (var placeAnimator in _placeAnimators)
         {
             placeAnimator.Unpressed();
@@ -62,17 +70,14 @@ public class PlaceInformationWindow : MonoBehaviour
             _farm.OnFarmFinished -= Render;
         }
 
-        _farm = place.GetComponent<Farm>();
+        _farm = place.Farm;
         place.PlaceAnimator.Pressed();
 
         _farm.OnTimerChanged += RenderStatusText;
         _farm.OnFarmFinished += Render;
 
-        _characterList.gameObject.SetActive(false);
-        gameObject.SetActive(true);
-
-        RenderLocation(place);
         _posiblePrizesWindow.RenderPrize(place);
+        RenderLocation(place);
         RenderButton(place);
         RenderStatusText();        
     }    
@@ -80,7 +85,6 @@ public class PlaceInformationWindow : MonoBehaviour
     private void RenderLocation(Place place)
     {
         _locationImage.sprite = place.Data.LocationImage;
-        _locationName.text = place.Data.LocationName;
         _locationDiscription.text = place.Data.Discription;
     }
 
@@ -91,6 +95,7 @@ public class PlaceInformationWindow : MonoBehaviour
 
         if (_farm.CanClaimRewared)
         {
+            _setOrUnsetCharacterButton.gameObject.SetActive(true);
             _setOrUnsetCharacterButton.onClick.AddListener(() =>
             {
                 place.UnsetCharacter();
@@ -101,25 +106,18 @@ public class PlaceInformationWindow : MonoBehaviour
             return;
         }
 
-        if (place.IsSet)
+        if (place.IsSet == false)
         {
-            _setOrUnsetCharacterButtonText.text = "Remove";
-            _setOrUnsetCharacterButton.onClick.AddListener(() =>
-            {
-                place.UnsetCharacter();
-                gameObject.SetActive(false);
-            });
-        }
-        else
-        {
-            if (_setCharacter != null)
+            if (SetCharacterInPlace != null)
             {
                 _setOrUnsetCharacterButton.gameObject.SetActive(true);
-                _setOrUnsetCharacterButtonText.text = "Set";
+                _setOrUnsetCharacterButtonText.text = "Start";
                 _setOrUnsetCharacterButton.onClick.AddListener(() =>
                 {
                     _farm.SetCooldown(_cooldownSelector.Cooldown);
-                    _setCharacter.Invoke();
+                    SetCharacterInPlace.Invoke();
+                    _setOrUnsetCharacterButton.gameObject.SetActive(false);
+                    gameObject.SetActive(false);
                 });
                 _cooldownSelector.gameObject.SetActive(true);
             }
@@ -127,24 +125,16 @@ public class PlaceInformationWindow : MonoBehaviour
             {
                 _setOrUnsetCharacterButton.gameObject.SetActive(false);
             }
-        }
+        }       
+
     }   
 
     private void RenderStatusText()
     {
         if (_farm.Place.IsSet)
-        {
-            _status.color = _farmColor;
             _statusText.text = _farm.Status;
-
-            if (_farm.CanClaimRewared == true)
-                _status.color = _finishColor;
-        }
         else
-        {
-            _status.color = _notfarmColor;
             _statusText.text = "";
-        }
     }
 
     private void SetCooldownMultiplyer()

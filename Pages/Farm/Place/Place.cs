@@ -17,22 +17,26 @@ namespace FarmPage.Farm
         [SerializeField] private Color _setCharacterColor;
         [SerializeField] private Color _unsetCharacterColor;
         
-        public PlaceAnimator PlaceAnimator;
         
         private bool _isSet;
         private global::Farm _farm;
+        private Button _button;
+
+        public PlaceAnimator PlaceAnimator;
 
         public PlaceData Data => _data;
         public bool IsSet => _isSet;
+        public global:: Farm Farm => _farm;
 
-        private void Start()
+        private void Awake()
         {
             _farm = GetComponent<global::Farm>();
+            _button = GetComponent<Button>();
         }
 
         private void OnEnable()
         {
-            GetComponent<Button>().onClick.AddListener(() => 
+            _button.onClick.AddListener(() => 
             {
                 _informationWindow.Render(this);
                 _listCharacterForSet.OpenCharacterList(this);
@@ -41,7 +45,15 @@ namespace FarmPage.Farm
 
         private void OnDisable()
         {
-            GetComponent<Button>().onClick.RemoveAllListeners();
+            _button.onClick.RemoveAllListeners();
+        }
+
+        public void UnsetCharacter()
+        {             
+            _isSet = false;
+            _maskImage.color = _unsetCharacterColor;
+            _farm.ClaimRewards();
+            _informationWindow.Render(this);
         }
 
         public void SetCharacter(CharacterCell character)
@@ -53,14 +65,6 @@ namespace FarmPage.Farm
             _farm.StartFarm();
             _informationWindow.Render(this);
             _listCharacterForSet.gameObject.SetActive(false);
-        }
-
-        public void UnsetCharacter()
-        {             
-            _isSet = false;
-            _maskImage.color = _unsetCharacterColor;
-            _farm.ClaimRewards();
-            _informationWindow.Render(this);
         }
     }
 }

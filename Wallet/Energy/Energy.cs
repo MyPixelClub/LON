@@ -23,6 +23,8 @@ public class Energy : MonoBehaviour
 
     public void DecreaseEnergy(int value)
     {
+        if (value > _currentEnergy) throw new ArgumentOutOfRangeException();
+
         if (value <= _maxEnergy && value > 0)
             _currentEnergy -= value;
 
@@ -31,8 +33,10 @@ public class Energy : MonoBehaviour
         StartCoroutine(Timer());
     }
 
-    private void IncreaseEnergy(int value)
+    public void IncreaseEnergy(int value)
     {
+        if(value > _maxEnergy || value < 0) throw new ArgumentOutOfRangeException();
+
         _currentEnergy += value;
 
         _energyView.UpdateEnergyValue(this);
@@ -42,7 +46,7 @@ public class Energy : MonoBehaviour
     {
         while (_currentEnergy < _maxEnergy)
         {
-            TimeSpan leftTime = new(0, 0, 10);
+            TimeSpan leftTime = new(0, 8, 0);
 
             _timer.text = $"{leftTime.Minutes}:{leftTime.Seconds}";
 
@@ -52,6 +56,12 @@ public class Energy : MonoBehaviour
 
                 leftTime -= new TimeSpan(0, 0, 1);
                 _timer.text = $"{leftTime.Minutes}:{leftTime.Seconds}";
+
+                if (_currentEnergy >= _maxEnergy)
+                {
+                    _timer.text = "00:00";
+                    StopAllCoroutines();
+                }
             }
 
             IncreaseEnergy(1);

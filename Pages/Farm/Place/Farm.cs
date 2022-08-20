@@ -1,6 +1,5 @@
 using System;
 using System.Collections;
-using System.Collections.Generic;
 using FarmPage.Farm;
 using TMPro;
 using UnityEngine;
@@ -39,7 +38,7 @@ public class Farm : MonoBehaviour
     }
 
     private bool _canClaimReward;
-    private float _claimCooldown = 24f / 24 / 60 / 6;
+    private float _claimCooldown;
 
     private TimeSpan _currentClaimCooldown;
 
@@ -77,7 +76,7 @@ public class Farm : MonoBehaviour
 
     public void SetCooldown(float cooldown)
     {
-        _claimCooldown = cooldown / 24 / 60 / 6;
+        _claimCooldown = cooldown;
     }
 
     public void StartFarm()
@@ -104,7 +103,7 @@ public class Farm : MonoBehaviour
         {
             var timeSpan = DateTime.UtcNow - _startFarmTime.Value;
         
-            if (timeSpan.TotalHours > _claimCooldown)
+            if (timeSpan.TotalMinutes > _claimCooldown)
                 _canClaimReward = true;
         }
 
@@ -116,14 +115,12 @@ public class Farm : MonoBehaviour
         if (_canClaimReward == false)
         {
             TimeSpan lastCurrentClaimCoolDown = _currentClaimCooldown;
-            DateTime nextClaimTime = _startFarmTime.Value.AddHours(_claimCooldown);
+            DateTime nextClaimTime = _startFarmTime.Value.AddMinutes(_claimCooldown);
 
             _currentClaimCooldown = nextClaimTime - DateTime.UtcNow;
 
-            _status.text = $"Left " +
-                //$"{_currentClaimCooldown.Hours} H. " +
-                $"{_currentClaimCooldown.Minutes} Min. " +
-                $"{_currentClaimCooldown.Seconds} Sec.";
+            _status.text =
+                $"{_currentClaimCooldown.Minutes} Min. ";
 
             if (_currentClaimCooldown.Seconds != lastCurrentClaimCoolDown.Seconds)
                 OnTimerChanged?.Invoke();

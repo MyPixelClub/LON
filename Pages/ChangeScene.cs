@@ -13,12 +13,10 @@ public class ChangeScene : MonoBehaviour
     [SerializeField] private Sprite[] _cardsImage;
     [SerializeField] private Image _cardImage;
 
-    private AsyncOperation _loadingSceneOperation;
+    private AsyncOperation _asyncLoadScene;
 
     private void OnEnable()
-    {
-        _loadingSceneOperation = SceneManager.LoadSceneAsync("BattleScene");
-        _loadingSceneOperation.allowSceneActivation = false;
+    {       
         StartCoroutine(LoadScene());
 
         StartCoroutine(ChangeCardsImage());
@@ -42,17 +40,21 @@ public class ChangeScene : MonoBehaviour
             yield return new WaitForSeconds(0.1f);
         }
 
-        _loadingSceneOperation.allowSceneActivation = true;
+        _asyncLoadScene.allowSceneActivation = true;
     }
 
     private IEnumerator ChangeCardsImage()
     {
+
+        _asyncLoadScene = SceneManager.LoadSceneAsync("BattleScene");
+        _asyncLoadScene.allowSceneActivation = false;
 
         while (_slider.value != 0)
         {
             _cardImage.sprite = _cardsImage[Random.Range(0, _cardsImage.Length)];
 
             yield return new WaitForSeconds(3f);
+
         }
     }
 }

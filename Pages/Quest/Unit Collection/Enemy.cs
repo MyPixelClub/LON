@@ -14,10 +14,11 @@ namespace FarmPage.Quest
 
     public class Enemy : Unit
     {
-        [SerializeField] private EnemyFlyAnimation _flyAnimation;
-        [SerializeField] private Image _blick;
+        [SerializeField] private EnemyFlyAnimation _flyAnimation;       
 
         [SerializeField] private EnemyPopup[] _variationPopup;
+
+        [SerializeField] private Image _blickImage;
 
         private EnemyQuestData _enemyQuestData;
 
@@ -28,14 +29,14 @@ namespace FarmPage.Quest
 
         public override void TakeDamage(float amountDamage)
         {
-            base.TakeDamage(amountDamage);
-            StartCoroutine(Blick());
+            base.TakeDamage(amountDamage);            
             if(Random.Range(1, 4) == 1)
                 _variationPopup[Random.Range(0, _variationPopup.Length)].StartMovement(this);
         }
 
         public void Init(EnemyQuestData enemyQuestData, HorizontalLayoutGroup horizontalLayoutGroup)
         {
+            _blick = _blickImage;
             _enemyQuestData = enemyQuestData;
             _health = _enemyQuestData.MaxHealth;
             _maxHealth = _enemyQuestData.MaxHealth;
@@ -44,18 +45,7 @@ namespace FarmPage.Quest
             Init();
         }
 
-        private IEnumerator Blick()
-        {
-            var color = _blick.color;
-            color.a = 1;
-
-            while (color.a != 0)
-            {
-                color.a -= 0.1f;
-                _blick.color = color;
-                yield return new WaitForSeconds(0.001f);
-            }
-        }
+        
 
         protected override void DecreaseHealth(float amountDamage)
         {

@@ -39,7 +39,7 @@ namespace Battle
             _battleIntro.SetActive(false);
 
             foreach (var card in cards) 
-                StartCoroutine(cardAnimators[card].StartingAnimation(sequence, y));
+                StartCoroutine(cardAnimators[card].StartIntro(sequence, y));
 
             yield return new WaitForSeconds(3f);
         }

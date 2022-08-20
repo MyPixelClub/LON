@@ -5,7 +5,6 @@ public interface ICard
 {  
     public Card Card { get; }
     public Sprite UIIcon { get; }
-    public Sprite Frame { get; }
 
     public int Attack { get; }
     public int Def { get; }

@@ -64,6 +64,5 @@ public class StatisticWindow : MonoBehaviour
         _atk.text =  cardCell.Attack.ToString();
         _def.text =  cardCell.Def.ToString();
         _health.text = cardCell.Health.ToString();
-        _name.text = cardCell.Card.Name;
     }
 }

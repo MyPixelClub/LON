@@ -12,8 +12,8 @@ using Zenject;
 
 public abstract class PlayerStatistic : MonoBehaviour
 {
-    [SerializeField] private TMP_Text _nickName, _levelText;
-    [SerializeField] private Image _avatar;
+    [SerializeField] protected TMP_Text _nickName, _levelText;
+    [SerializeField] protected Image _avatar;
     
 
     [SerializeField] protected Player _player;

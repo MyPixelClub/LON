@@ -1,7 +1,5 @@
 using DG.Tweening;
-using FarmPage.Quest;
 using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -9,7 +7,12 @@ public abstract class Unit : MonoBehaviour
 {
     [SerializeField] protected Image _view;
     [SerializeField] private Slider _healthSlider;
-    [SerializeField] private SliderAnimator _healthSliderAnimator;    
+    [SerializeField] private SliderAnimator _healthSliderAnimator;
+
+    [SerializeField] private float _hightestPositionDuringSelect;
+    [SerializeField] private float _hightestScaleDuringSelect;
+
+    protected Image _blick;
 
     protected float _health;
     protected float _maxHealth;
@@ -29,7 +32,9 @@ public abstract class Unit : MonoBehaviour
         if (amountDamage < 0)
             throw new System.AggregateException();
 
-        DecreaseHealth(amountDamage);        
+        DecreaseHealth(amountDamage);
+
+        StartCoroutine(Blick());
 
         _healthSliderAnimator.UpdateSlider(_health, MaxHealth, 1, _healthSliderAnimator.Slider.value);
 
@@ -54,13 +59,27 @@ public abstract class Unit : MonoBehaviour
         {
             var multiplier = 1 - (i / 9);
 
-            transform.DOLocalMove(transform.localPosition.RandomVector2(10 * multiplier), 0.005f);
+            transform.DOLocalMove(transform.localPosition.RandomVector2(10 * multiplier), 0.05f);
             yield return new WaitForSeconds(0.005f);
-            transform.DOLocalMove(startLocalPosition, 0.005f);
+            transform.DOLocalMove(startLocalPosition, 0.05f);
             yield return new WaitForSeconds(0.005f);
         }
 
         IsShake = false;
+    }
+
+    private IEnumerator Blick()
+    {
+        var color = _blick.color;
+        color.a = 1;
+        _blick.color = color;
+
+        while (color.a != 0)
+        {
+            color.a -= 0.01f;
+            _blick.color = color;
+            yield return new WaitForSeconds(0.0001f);
+        }
     }
 
     public IEnumerator Selected()
@@ -71,10 +90,8 @@ public abstract class Unit : MonoBehaviour
         _scale = transform.localScale;
 
         sequence
-            //.Insert(0, _view.DOColor(new Color(1, 1, 1, 0.5f), 0.5f))
-            .Insert(0, transform.DOLocalMove(_localPosition + new Vector3(0, 200, 0), 0.4f))
-            .Insert(0, transform.DOScale(_scale * 1.4f, 0.4f));
-        //.Insert(0.5f, _view.DOColor(Color.clear, 0.5f));
+            .Insert(0, transform.DOLocalMove(_localPosition + new Vector3(0, _hightestPositionDuringSelect, 0), 0.4f))
+            .Insert(0, transform.DOScale(_scale * _hightestScaleDuringSelect, 0.4f));
 
         yield return new WaitForSeconds(1f);
 

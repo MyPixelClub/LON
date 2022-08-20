@@ -9,10 +9,10 @@ namespace FarmPage.Quest
         public EnemyType EnemyType;
         public Sprite View;
 
-        [Range(100, 2000)] 
+        [Range(100, 100000)] 
         public int MaxHealth;
 
-        [Range(50, 500)] 
+        [Range(100, 100000)] 
         public int Damage;        
     }
 }

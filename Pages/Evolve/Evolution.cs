@@ -9,6 +9,8 @@ using System.Collections.Generic;
 
 public class Evolution : MonoBehaviour
 {
+    public event UnityAction OnEvolvedCard;
+
     [SerializeField] private CardCollection _cardCollection;
     [SerializeField] private EvolveCardCollection _evolveCardCollectionInCollectionPage, _evolutionCardCollectionInEvolvePage;
 
@@ -18,14 +20,10 @@ public class Evolution : MonoBehaviour
     [SerializeField] private Button _evolveButton;
     [SerializeField] private Button _backButton;
 
-    [SerializeField] private GameObject _exeptionWindow;
-
-    [SerializeField] private GameObject _evolvedCardWindow;
-    [SerializeField] private Image _evolvedCardImage;
-
-    public event UnityAction OnEvolvedCard;
     public EvolutionCard FirstCard => _firstCardForEvolution;
     public EvolutionCard SecondeCard => _secondeCardForEvolution;
+
+    public Sprite EvolvedCardSprite { get; private set; }
 
     private void OnEnable()
     {
@@ -43,6 +41,7 @@ public class Evolution : MonoBehaviour
     {
         _backButton.onClick.RemoveAllListeners();
         _evolveButton.onClick.RemoveListener(EvolveCard);
+        _evolveButton.interactable = false;
     }
 
     public void Reset()
@@ -67,21 +66,19 @@ public class Evolution : MonoBehaviour
         {
             _secondeCardForEvolution.SetCard(cardCollectionCell);
             _evolutionCardCollectionInEvolvePage.SetCardCollection(cardsForEvolve);
+            _evolveButton.interactable = true;
         }
     }
 
     private void EvolveCard()
     {
-        if (_firstCardForEvolution.IsSet && _secondeCardForEvolution.IsSet)
-        {
-            _cardCollection.AddCardCell(GetEvolvedCard());
-            _cardCollection.DeleteCards(new[] { FirstCard.CardCell, SecondeCard.CardCell });
-            OnEvolvedCard?.Invoke();
-        }
-        else
-        {
-            _exeptionWindow.SetActive(true);
-        }
+        if (_firstCardForEvolution.IsSet == false || _secondeCardForEvolution.IsSet == false)
+            throw new System.InvalidOperationException();
+
+        _cardCollection.AddCardCell(GetEvolvedCard());
+        _cardCollection.DeleteCards(new[] { FirstCard.CardCell, SecondeCard.CardCell });
+        OnEvolvedCard?.Invoke();
+        _evolveButton.interactable = false;
     }
 
     private CardCell GetEvolvedCard()
@@ -90,8 +87,7 @@ public class Evolution : MonoBehaviour
 
         evolvedCard.Evolve(_firstCardForEvolution, _secondeCardForEvolution);
 
-        // _evolvedCardWindow.SetActive(true);
-        //a_evolvedCardImage.sprite = evolvedCard.Icon.sprite;
+        EvolvedCardSprite = evolvedCard.UIIcon;
 
         return evolvedCard;
     }    

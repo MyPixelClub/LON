@@ -7,10 +7,9 @@ using UnityEngine.UI;
 public class NameEditor : MonoBehaviour
 {
     [SerializeField] private TMP_InputField _inputerNewName;
-    [SerializeField] private TMP_Text _playerName;
 
-    public void ChangeName()
+    public string GetNewName()
     {
-        _playerName.text = _inputerNewName.text;
+        return _inputerNewName.text;
     }
 }

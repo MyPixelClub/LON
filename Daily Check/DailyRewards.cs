@@ -5,19 +5,27 @@ using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
 
-public class DailyRewards : MonoBehaviour
+public class DailyRewards : MonoBehaviour, IIncreaserWalletValueAndCardsCount
 {
     [SerializeField] private Button _claimButton;
 
     [SerializeField] private RewardPref _rewardPref;
     [SerializeField] Transform _rewardsGrid;
 
-    [SerializeField] private List<Reward> _rewards = new();
+    [SerializeField] private List<Prize> _rewards = new();
 
     [SerializeField] private TMP_Text _status;
 
     [SerializeField] private CristalWallet _cristalWallet;
     [SerializeField] private GoldWallet _goldWallet;
+    [SerializeField] private Inventory _inventory;
+
+    private bool _canClaimReward;
+    private int _maxStreakCount;
+    private float _claimCoolDown = 24f;
+    private float _claimDeadLine = 48f;
+
+    private List<RewardPref> _rewardPrefabs = new();
 
     private int _currentStreak
     {
@@ -45,12 +53,14 @@ public class DailyRewards : MonoBehaviour
         }
     }
 
-    private bool _canClaimReward;
-    private int _maxStreakCount;
-    private float _claimCoolDown = 24f;
-    private float _claimDeadLine = 48f;
+    public CardCollection CardCollection => throw new NotImplementedException();
 
-    private List<RewardPref> _rewardPrefabs = new();
+    public CristalWallet CristalWallet => _cristalWallet;
+
+    public GoldWallet GoldWallet => _goldWallet;
+
+    public Inventory Inventory => _inventory;
+
 
     private void Start()
     {
@@ -136,16 +146,7 @@ public class DailyRewards : MonoBehaviour
         if (_canClaimReward == false)
             return;
 
-        var reward = _rewards[_currentStreak];
-        switch (reward.Type)
-        {
-            case Reward.RewardType.Gold:
-                _goldWallet.Add—urrency(reward.Value);
-                break;
-            case Reward.RewardType.Cristal:
-                _cristalWallet.Add—urrency(reward.Value);
-                break;
-        }
+        _rewards[_currentStreak].TakeItem(this);
 
         _lastClaimTime = DateTime.UtcNow;
         _currentStreak += 1;

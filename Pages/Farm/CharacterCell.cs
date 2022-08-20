@@ -7,26 +7,37 @@ using UnityEngine.UI;
 [RequireComponent(typeof(Button))]
 public class CharacterCell : MonoBehaviour
 {
-    public event UnityAction<CharacterCell> OnSelect;
+    public event UnityAction<CharacterCell> OnSelected;
 
     [SerializeField] private Image _image;
+    [SerializeField] private Button _button;
 
-    private int _index;
-    
+    [SerializeField] private Color _selectColor;
+
     public Sprite CharacterSprite => _image.sprite;
 
     private void OnEnable()
     {
-        GetComponent<Button>().onClick.AddListener(() => OnSelect.Invoke(this));
+        _button.onClick.AddListener(() => OnSelected?.Invoke(this));
     }
 
     private void OnDisable()
     {
-        GetComponent<Button>().onClick.RemoveAllListeners();
+        _button.onClick.RemoveAllListeners();
     }
 
     public void Render(Sprite sprite)
     {
         _image.sprite = sprite;
+    }
+
+    public void Select()
+    {
+        _image.color = _selectColor;
+    }
+
+    public void UnSelect()
+    {
+        _image.color = new Color(1,1,1,1);
     }
 }

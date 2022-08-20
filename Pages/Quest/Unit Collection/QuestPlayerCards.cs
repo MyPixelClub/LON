@@ -1,9 +1,7 @@
 using Collection;
-using FarmPage.Quest;
 using System;
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UI;
 
 public class QuestPlayerCards : QuestCollection
 {
@@ -11,6 +9,8 @@ public class QuestPlayerCards : QuestCollection
 
     [SerializeField] private AttackDeck _attackDeck;
     [SerializeField] private PlayerStatisticQuest _playerStatisticQuest;
+
+    [SerializeField] protected Image _blickImage;
 
     protected override Unit[] GetArrayType()
     {
@@ -27,6 +27,6 @@ public class QuestPlayerCards : QuestCollection
 
     protected override void InitUnit(Unit unit, int position)
     {
-        (unit as FarmPage.Quest.Card).Init(_attackDeck.CardsInDeck[position], _playerStatisticQuest);
+        (unit as FarmPage.Quest.Card).Init(_attackDeck.CardsInDeck[position], _playerStatisticQuest, _blickImage);
     }
 }

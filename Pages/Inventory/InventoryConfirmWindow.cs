@@ -5,30 +5,36 @@ using UnityEngine.UI;
 
 public class InventoryConfirmWindow : MonoBehaviour
 {
-    [SerializeField] private Button _yesButton;
+    [SerializeField] private Button _useButton;
     [SerializeField] private Inventory _inventory;
 
-    private InventoryCell _bottelCell;
+    [SerializeField] private Image _itemImage;
+
+    private InventoryCell _inventoryCell;
 
     private void OnEnable()
     {
-        _yesButton.onClick.AddListener(UseEffect);
+        _useButton.onClick.AddListener(UseEffect);
     }
 
     private void OnDisable()
     {
-        _yesButton.onClick.RemoveAllListeners();
+        _useButton.onClick.RemoveAllListeners();
     }
 
-    public void Open(InventoryCell bottelCell)
+    public void Open(InventoryCell inventoryItem)
     {
+        _useButton.interactable = inventoryItem.InventoryItem.IsUseableInInventory;
+
         gameObject.SetActive(true);
-        _bottelCell = bottelCell;
+        _inventoryCell = inventoryItem;
+
+        _itemImage.sprite = inventoryItem.Icon;
     }
 
     private void UseEffect()
     {
-        _bottelCell.Bottel.UseEffect(_inventory, _bottelCell);
+        _inventoryCell.InventoryItem.UseEffect(_inventory);
         gameObject.SetActive(false);
     }
 }

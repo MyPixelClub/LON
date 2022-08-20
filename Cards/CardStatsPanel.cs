@@ -20,17 +20,10 @@ namespace Cards
         private int _health;
         private int _defence;
 
+        public int Defence => _defence;
+        public int Health => _health;
+        public int DamageAfterRessist { get; private set; }
         public TMP_Text HealthText => _healthText;
-
-        public int DecreaseHealth(int damage)
-        {
-            damage -= _defence / 2;
-            if (damage < 0) damage = 0;
-            _health -= damage;
-            if (_health <= 0) _health = 0; ;
-            _healthText.text = _health.ToString();
-            return _health;
-        }
 
         public void Init(string attack, int defence, int health, Sprite scillIcon)
         {
@@ -42,14 +35,23 @@ namespace Cards
             _skillImage.sprite = scillIcon;
         }
 
-        private string GetShortNameRarity(string rarity)
+        public void DecreaseHealth(int damage)
+        {          
+            _health -= GetDamageValueAfterResist(damage);
+
+            if (_health <= 0) _health = 0; ;
+            _healthText.text = _health.ToString();
+        }
+
+        private int GetDamageValueAfterResist(float amountDamage)
         {
-            int i = 0;
-            char[] chars = new char[rarity.Length];
-            foreach (char c in rarity)
-                if (char.IsUpper(c))
-                    chars[i++] = c;
-            return new string(chars, 0, i);
+            amountDamage -= Random.Range(_defence / 2, _defence);
+
+            if (amountDamage < 0) amountDamage = 0;
+
+            DamageAfterRessist = (int)amountDamage;
+
+            return DamageAfterRessist;
         }
     }
 }

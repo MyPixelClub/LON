@@ -8,28 +8,71 @@ using Zenject;
 public class Inventory : MonoBehaviour
 {
     [SerializeField] private InventoryConfirmWindow _confirmWindow;
-    private List<ShopItemBottle> _bottleCollection = new List<ShopItemBottle>();
+
+    [SerializeField] private Player _player;
+    [SerializeField] private PlayerStatisticQuest _playerStatisticQuest;
+
+    [SerializeField] private Transform _container;
+    [SerializeField] private InventoryCell _inventoryItemCellTemplate;
+
+    private List<InventoryCell> _itemCollection = new List<InventoryCell>();
 
     public InventoryConfirmWindow ConfirmWindow => _confirmWindow;
-    public List<ShopItemBottle> BottleCollection => _bottleCollection;
+    public List<InventoryCell> ItemCollection => _itemCollection;
 
-    public void AddItem(ShopItemBottle bottle)
+    public Player Player => _player;
+    public PlayerStatisticQuest PlayerStatisticQuest => _playerStatisticQuest;
+
+    public void AddItem(ShopInventoryItem bottle)
     {
-        _bottleCollection.Add(bottle);
+        System.Func<ShopItem, bool> itemContainsList = (a) =>
+        {
+            foreach (var item in _itemCollection)
+            {
+                if (item.InventoryItem.name == a.name)
+                {
+                    item.AmountThisItem++;
+                    return true;
+                }
+            };
+
+            return false;
+        };
+
+        if (itemContainsList(bottle) == false)
+        {
+            var cell = Instantiate(_inventoryItemCellTemplate, _container);
+            cell.Render(bottle, this);
+            _itemCollection.Add(cell);
+        }
     }
 
-    public void UseEnergyBottle(InventoryCell item)
+    public void ReduceAmount(ShopInventoryItem inventoryItem, int amountValue)
     {
-        DestroyItem(item);
-    }
+        if (amountValue <= 0 || amountValue > _itemCollection.Count) throw new System.ArgumentOutOfRangeException();
 
-    private void DestroyItem(InventoryCell bottel)
-    {
-        bottel.AmountThisItem--;
 
-        if (bottel.AmountThisItem == 0)
-            Destroy(bottel.gameObject);
+        InventoryCell item = null;
 
-        _bottleCollection.Remove(bottel.Bottel);
+        foreach (var itemInCollection in _itemCollection)
+        {
+            if (itemInCollection.InventoryItem.GetType() == inventoryItem.GetType())
+            {
+                item = itemInCollection;
+                break;
+            }
+
+            throw new System.InvalidOperationException();
+        }
+
+        for (int i = 0; i < amountValue; i++)
+        {
+            item.AmountThisItem--;
+
+            if (item.AmountThisItem == 0)
+                Destroy(item.gameObject);
+
+            _itemCollection.Remove(item);
+        }
     }
 }

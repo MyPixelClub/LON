@@ -1,5 +1,6 @@
 using Collection;
 using System;
+using System.Collections.Generic;
 using UnityEngine;
 
 public class Player : MonoBehaviour
@@ -10,8 +11,12 @@ public class Player : MonoBehaviour
 
     [SerializeField] private Sprite _avatar;
 
-    private int _maxExp = 100, _exp, _level = 1, _health = 100;
+    private List<PlayerBoostingItem> _playerBoostingEffects = new();
+
+    private int _maxExp = 1000, _exp, _level = 1, _health = 1000;
     private string _nickName = "NickName";
+
+    public List<PlayerBoostingItem> PlayerBoostingEffects => _playerBoostingEffects;
 
     public Sprite Avatar => _avatar;
     public int MaxExp => _maxExp;
@@ -21,7 +26,12 @@ public class Player : MonoBehaviour
     public int Health => _health;
 
     public Energy Energy => _energy;
-    
+
+    private void Start()
+    {
+        OnValueChanged?.Invoke();
+    }
+
     public void DecreaseEnergy(int energy)
     {
         _energy.DecreaseEnergy(energy);
@@ -43,5 +53,24 @@ public class Player : MonoBehaviour
         }
 
         OnValueChanged?.Invoke();
+    }
+
+    public void ChangeAvarar(Sprite newAvatar)
+    {
+        _avatar = newAvatar;
+        OnValueChanged?.Invoke();
+    }
+
+    public void ChangeName(string newName)
+    {
+        _nickName = newName;
+        OnValueChanged?.Invoke();
+    }
+
+    public void UseBoostingItem(PlayerBoostingItem boostingItem)
+    {
+        if (_playerBoostingEffects.Contains(boostingItem)) throw new Exception("This effect alrady exist");
+
+        _playerBoostingEffects.Add(boostingItem);
     }
 }

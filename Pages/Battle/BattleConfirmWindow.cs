@@ -1,6 +1,4 @@
-using System.Collections.Generic;
 using DG.Tweening;
-using Infrastructure.Services;
 using TMPro;
 using UnityEngine;
 using Collection;
@@ -35,6 +33,7 @@ namespace FarmPage.Battle
         private void OnEnable()
         {
             _button.onClick.AddListener(StartBattle);
+            _button.interactable = false;
         }
 
         private void OnDisable()
@@ -42,9 +41,10 @@ namespace FarmPage.Battle
             _button.onClick.RemoveAllListeners();
         }
 
-        public void SeelectEnemyCards(EnemyBattle enemy)
+        public void SelectEnemyCards(EnemyBattle enemy)
         {
             _enemy = enemy;
+            _button.interactable = true;
         }
 
         private void StartBattle()

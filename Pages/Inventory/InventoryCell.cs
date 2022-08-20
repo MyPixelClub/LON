@@ -14,14 +14,13 @@ public class InventoryCell : MonoBehaviour
     [SerializeField] private Image _icon;
     [SerializeField] private GameObject _selectionFrame;
 
-    private BottleEffects _effects;
-
-    private ShopItemBottle _shopItemBottle;
+    private ShopInventoryItem _inventoryItem;
     private InventoryConfirmWindow _confirmWindow;
 
     private int _amountThisItem = 1;
 
-    public ShopItemBottle Bottel => _shopItemBottle;
+    public ShopInventoryItem InventoryItem => _inventoryItem;
+    public Sprite Icon => _icon.sprite;
 
     public int AmountThisItem
     {
@@ -43,11 +42,10 @@ public class InventoryCell : MonoBehaviour
         GetComponent<Button>().onClick.RemoveListener(SelectItem);
     }
 
-    public void Render(ShopItemBottle shopItem, Inventory inventory)
+    public void Render(ShopInventoryItem shopItem, Inventory inventory)
     {
         _icon.sprite = shopItem.UIIcon;
-        _effects = shopItem.Effect;
-        _shopItemBottle = shopItem;
+        _inventoryItem = shopItem;
         _confirmWindow = inventory.ConfirmWindow;
         _selectionFrame.SetActive(false);
     }

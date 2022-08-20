@@ -15,10 +15,12 @@ namespace FarmPage.Quest
         [SerializeField] private QuestPlayerCards _playerCards;
         [SerializeField] private QuestEnemyCollection _enemyCollection;
 
-        [SerializeField] private QuestPrizeWindow _winWindow;
+        [SerializeField] private PrizeWindow _winWindow;
         [SerializeField] private GameObject _loseWindow;              
 
         [SerializeField] private PlayerAvatarQuest _avatar;
+
+        [SerializeField] private RevertHealthWindow _revertHealthWindow;
 
         private Chapter _chapter;
 
@@ -39,17 +41,16 @@ namespace FarmPage.Quest
             while (_playerCards.IsUnitsAlive && _playerStatisticQuest.Health > 0)
             {
                 yield return _enemyCollection.TakeDamage(_playerCards.UnitsDamage);
-                yield return new WaitForSeconds(2);
+                yield return new WaitForSeconds(1);
 
-                if (_enemyCollection.IsUnitsAlive)
-                {
-                    yield return _playerCards.TakeDamage(_enemyCollection.UnitsDamage);
-                    yield return new WaitForSeconds(2);
-                }
-                else
-                {
+                if (_enemyCollection.IsUnitsAlive == false)
                     break;
-                }
+
+                yield return _playerCards.TakeDamage(_enemyCollection.UnitsDamage);
+                yield return new WaitForSeconds(1);
+
+                if (_playerStatisticQuest.Health <= 0)
+                    yield return _revertHealthWindow.Open();
             }
 
             yield return new WaitForSeconds(0.5f);
@@ -67,13 +68,9 @@ namespace FarmPage.Quest
             _player.IncreaseEXP(_chapter.Exp);
 
             yield return new WaitForSeconds(1f);
-            //_winWindow.OpenPrizeWindow(_prizes);
-
-            if (_chapter.NextChapter != null)
-            {
-                _chapter.NextChapter.UnlockedChapter();
-                _chapter.ChapterList.SetCountQuestPased(_chapter.NextChapter.Id);
-            }
+            _winWindow.Render(_chapter.PosiblePrizes);
+                        
+            _chapter.ChapterList.SetCountQuestPased(_chapter.Id);
         }
 
         private IEnumerator PlayerLose()
